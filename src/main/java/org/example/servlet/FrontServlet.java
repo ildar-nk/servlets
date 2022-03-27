@@ -6,10 +6,13 @@ import jakarta.servlet.UnavailableException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.controller.AccountController;
 import org.example.controller.UserController;
 import org.example.exception.InitializationException;
 import org.example.handler.Handler;
+import org.example.repository.AccountRepository;
 import org.example.repository.UserRepository;
+import org.example.service.AccountService;
 import org.example.service.UserService;
 import org.jdbi.v3.core.Jdbi;
 
@@ -41,9 +44,13 @@ public class FrontServlet extends HttpServlet {
             final UserService userService = new UserService(userRepository);
             final Gson gson = new Gson();
             final UserController userController = new UserController(userService, gson);
+
+            final AccountRepository accountRepository = new AccountRepository(jdbi);
+            final AccountService accountService = new AccountService(accountRepository);
+            final AccountController accountController = new AccountController(accountService, gson);
+
             routes.put("/users.getAll", userController::getAll);
-
-
+            routes.put("/accounts.getMy", accountController::getAll);
 
         } catch (Exception e){
             throw new UnavailableException(e.getMessage());

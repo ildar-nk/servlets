@@ -9,13 +9,16 @@ import java.nio.charset.StandardCharsets;
 
 public class Client {
     public static void main(String[] args) throws IOException, InterruptedException {
-        System.setProperty("javax.net.ssl.keyStore", "certs/vasya.jks");
+        final String user = "petya";
+        final String url = "accounts.getMy";
+
+        System.setProperty("javax.net.ssl.keyStore", "certs/" + user + ".jks");
         System.setProperty("javax.net.ssl.keyStorePassword", "passphrase");
         System.setProperty("javax.net.ssl.trustStore", "certs/truststore.jks");
         System.setProperty("javax.net.ssl.trustStorePassword", "passphrase");
 
         final HttpClient client = HttpClient.newHttpClient();
-        final HttpRequest request = HttpRequest.newBuilder(URI.create("https://127.0.0.1:8443/users.getAll"))
+        final HttpRequest request = HttpRequest.newBuilder(URI.create("https://127.0.0.1:8443/" + url))
                 .GET()
                 .build();
 
