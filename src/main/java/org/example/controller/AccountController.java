@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.attribute.RequestAttributes;
 import org.example.dto.AccountGetAllResponseDTO;
+import org.example.dto.AccountGetByIdResponseDTO;
 import org.example.mime.ContentTypes;
 import org.example.security.Authentication;
 import org.example.service.AccountService;
@@ -22,6 +23,15 @@ public class AccountController {
     public void getAll(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
         Authentication auth = (Authentication) req.getAttribute(RequestAttributes.AUTH_ATTR);
         final List<AccountGetAllResponseDTO> responseData = service.getAll(auth);
+        resp.setContentType(ContentTypes.APPLICATION_JSON);
+        resp.getWriter().write(gson.toJson(responseData));
+
+    }
+
+    public void getById(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        Authentication auth = (Authentication) req.getAttribute(RequestAttributes.AUTH_ATTR);
+        final String id = req.getParameter("id");
+        final AccountGetByIdResponseDTO responseData = service.getById(auth, id);
         resp.setContentType(ContentTypes.APPLICATION_JSON);
         resp.getWriter().write(gson.toJson(responseData));
 

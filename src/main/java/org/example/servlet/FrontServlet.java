@@ -51,6 +51,8 @@ public class FrontServlet extends HttpServlet {
 
             routes.put("/users.getAll", userController::getAll);
             routes.put("/accounts.getMy", accountController::getAll);
+            routes.put("/accounts.getById", accountController::getById);
+
 
         } catch (Exception e){
             throw new UnavailableException(e.getMessage());

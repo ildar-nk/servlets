@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 public class Client {
     public static void main(String[] args) throws IOException, InterruptedException {
         final String user = "petya";
-        final String url = "accounts.getMy";
+        final String url = "accounts.getById?id=b70369c7-e49a-4391-9fb6-29a3d96407c3";
 
         System.setProperty("javax.net.ssl.keyStore", "certs/" + user + ".jks");
         System.setProperty("javax.net.ssl.keyStorePassword", "passphrase");
