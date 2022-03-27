@@ -82,16 +82,17 @@
          Either JSSE or OpenSSL style configuration may be used regardless of
          the SSLImplementation selected. JSSE style configuration is used below.
     -->
-    <!--
+
     <Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"
                maxThreads="150" SSLEnabled="true">
         <UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />
-        <SSLHostConfig>
-            <Certificate certificateKeystoreFile="conf/localhost-rsa.jks"
-                         type="RSA" />
+        <SSLHostConfig protocol="TLSv1.3" certificateVerification="required"
+        trustoreFile="conf/serts/truststore.jks" trustorePassword="passphrase">
+            <Certificate certificateKeystoreFile="conf/serts/server.jks"
+                         sertificateKeystorePassworde="passphrase" />
         </SSLHostConfig>
     </Connector>
-    -->
+
 
     <!-- Define an AJP 1.3 Connector on port 8009 -->
     <!--
