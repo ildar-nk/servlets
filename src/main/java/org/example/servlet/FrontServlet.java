@@ -51,6 +51,7 @@ public class FrontServlet extends HttpServlet {
     }
 
     // http://localhost:8080/users.getAll
+    // https://127.0.0.1:8443/users.getAll
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //resp.getWriter().write("Hello world");

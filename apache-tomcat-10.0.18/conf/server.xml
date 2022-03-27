@@ -86,10 +86,10 @@
     <Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"
                maxThreads="150" SSLEnabled="true">
         <UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />
-        <SSLHostConfig protocol="TLSv1.3" certificateVerification="required"
-        trustoreFile="conf/serts/truststore.jks" trustorePassword="passphrase">
-            <Certificate certificateKeystoreFile="conf/serts/server.jks"
-                         sertificateKeystorePassworde="passphrase" />
+        <SSLHostConfig protocols="TLSv1.3" certificateVerification="required"
+        truststoreFile="conf/certs/truststore.jks" truststorePassword="passphrase">
+            <Certificate certificateKeystoreFile="conf/certs/server.jks"
+                         certificateKeystorePassword="passphrase" />
         </SSLHostConfig>
     </Connector>
 
