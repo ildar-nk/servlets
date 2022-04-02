@@ -1,0 +1,7 @@
+POST https://localhost:8443/users.register
+Content-Type: application/json
+
+{
+  "login": "masha",
+  "password": "secret"
+}

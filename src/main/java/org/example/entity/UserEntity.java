@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class UserEntity {
     private long id;
     private String login;
+    private String password;
 }

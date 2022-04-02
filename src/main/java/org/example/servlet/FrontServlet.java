@@ -15,6 +15,8 @@ import org.example.repository.UserRepository;
 import org.example.service.AccountService;
 import org.example.service.UserService;
 import org.jdbi.v3.core.Jdbi;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
@@ -41,15 +43,17 @@ public class FrontServlet extends HttpServlet {
 
             Jdbi jdbi = Jdbi.create(ds);
             UserRepository userRepository = new UserRepository(jdbi);
-            final UserService userService = new UserService(userRepository);
+            final PasswordEncoder passwordEncoder = new Argon2PasswordEncoder();
+            final UserService userService = new UserService(userRepository, passwordEncoder);
             final Gson gson = new Gson();
-            final UserController userController = new UserController(userService, gson);
 
+            final UserController userController = new UserController(userService, gson);
             final AccountRepository accountRepository = new AccountRepository(jdbi);
             final AccountService accountService = new AccountService(accountRepository);
             final AccountController accountController = new AccountController(accountService, gson);
 
             routes.put("/users.getAll", userController::getAll);
+            routes.put("/users.register", userController::register);
             routes.put("/accounts.getMy", accountController::getAll);
             routes.put("/accounts.getById", accountController::getById);
 

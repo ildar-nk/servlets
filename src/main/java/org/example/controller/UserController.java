@@ -5,6 +5,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.UserGetAllResponseDTO;
+import org.example.dto.UserRegisterRequestDTO;
+import org.example.dto.UserRegisterResponsetDTO;
 import org.example.service.UserService;
 
 import java.io.IOException;
@@ -19,5 +21,12 @@ public class UserController {
         final List<UserGetAllResponseDTO> responseData = service.getAll();
         resp.setContentType("application/json");
         resp.getWriter().write(gson.toJson(responseData));
+    }
+
+    public void register(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        final UserRegisterRequestDTO requestData = gson.fromJson(request.getReader(), UserRegisterRequestDTO.class);
+        final UserRegisterResponsetDTO responseData = service.register(requestData);
+        response.setContentType("application/json");
+        response.getWriter().write(gson.toJson(responseData));
     }
 }
