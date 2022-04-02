@@ -11,3 +11,8 @@ CREATE TABLE accounts (
     balance INT NOT NULL DEFAULT 0
 
 );
+
+CREATE TABLE tokens (
+  value TEXT PRIMARY KEY,
+  user_id BIGSERIAL NOT NULL REFERENCES users
+);

@@ -6,6 +6,7 @@ import jakarta.servlet.UnavailableException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.attribute.ContexAttributes;
 import org.example.controller.AccountController;
 import org.example.controller.UserController;
 import org.example.exception.InitializationException;
@@ -26,41 +27,43 @@ import java.util.Map;
 
 //http://localhost:8080
 public class FrontServlet extends HttpServlet {
-    private final Map<String, Handler> routes = new HashMap<>();
+    private Map<String, Handler> routes;
 
     @Override
     public void init() throws ServletException {
-        try {
+        routes = (Map<String, Handler>) getServletContext().getAttribute(ContexAttributes.ROUTES_ATTR);
 
-
-            InitialContext cxt = new InitialContext();
-
-            DataSource ds = (DataSource) cxt.lookup("java:/comp/env/jdbc/ds");
-
-            if (ds == null) {
-                throw new InitializationException("Data source not found!");
-            }
-
-            Jdbi jdbi = Jdbi.create(ds);
-            UserRepository userRepository = new UserRepository(jdbi);
-            final PasswordEncoder passwordEncoder = new Argon2PasswordEncoder();
-            final UserService userService = new UserService(userRepository, passwordEncoder);
-            final Gson gson = new Gson();
-
-            final UserController userController = new UserController(userService, gson);
-            final AccountRepository accountRepository = new AccountRepository(jdbi);
-            final AccountService accountService = new AccountService(accountRepository);
-            final AccountController accountController = new AccountController(accountService, gson);
-
-            routes.put("/users.getAll", userController::getAll);
-            routes.put("/users.register", userController::register);
-            routes.put("/accounts.getMy", accountController::getAll);
-            routes.put("/accounts.getById", accountController::getById);
-
-
-        } catch (Exception e){
-            throw new UnavailableException(e.getMessage());
-        }
+//        try {
+//
+//
+//            InitialContext cxt = new InitialContext();
+//
+//            DataSource ds = (DataSource) cxt.lookup("java:/comp/env/jdbc/ds");
+//
+//            if (ds == null) {
+//                throw new InitializationException("Data source not found!");
+//            }
+//
+//            Jdbi jdbi = Jdbi.create(ds);
+//            UserRepository userRepository = new UserRepository(jdbi);
+//            final PasswordEncoder passwordEncoder = new Argon2PasswordEncoder();
+//            final UserService userService = new UserService(userRepository, passwordEncoder);
+//            final Gson gson = new Gson();
+//
+//            final UserController userController = new UserController(userService, gson);
+//            final AccountRepository accountRepository = new AccountRepository(jdbi);
+//            final AccountService accountService = new AccountService(accountRepository);
+//            final AccountController accountController = new AccountController(accountService, gson);
+//
+//            routes.put("/users.getAll", userController::getAll);
+//            routes.put("/users.register", userController::register);
+//            routes.put("/accounts.getMy", accountController::getAll);
+//            routes.put("/accounts.getById", accountController::getById);
+//
+//
+//        } catch (Exception e){
+//            throw new UnavailableException(e.getMessage());
+//        }
     }
 
     // http://localhost:8080/users.getAll

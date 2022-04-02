@@ -5,3 +5,11 @@ Content-Type: application/json
   "login": "masha",
   "password": "secret"
 }
+
+### Get
+GET https://localhost:8443/accounts.getMy
+Authorization: Basic masha secret
+
+### Get
+GET https://localhost:8443/accounts.getMy
+Authorization: Bearer gSV9fAGsRpbGl5cgUG-rizHqCBf_zNbQr0YPXRf4sQNudGhEHJiLKKZID22h_bjcpsDLYWcODDT6oTq28w2p_pS6IehCj0KWHd24g4SExtH11uZ1zwAWM9TdKX69iVbsidmxIjdOVorNRT29_DDBE2T2rWXhhZvELQO0m_p1gvc

@@ -3,6 +3,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
          version="5.0">
+    <listener>
+        <listener-class>org.example.listener.ServletContextInitializationDestroyListener</listener-class>
+    </listener>
     <servlet>
         <servlet-name>front</servlet-name>
         <servlet-class>org.example.servlet.FrontServlet</servlet-class>
@@ -28,6 +31,23 @@
         <filter-name>x509</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+    <filter>
+        <filter-name>basic</filter-name>
+        <filter-class>org.example.filter.BasicAuthenticationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>basic</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter>
+        <filter-name>bear</filter-name>
+        <filter-class>org.example.filter.BearerAuthenticationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>bear</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>secured</web-resource-name>
