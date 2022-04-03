@@ -1,3 +1,4 @@
+### Register
 POST https://localhost:8443/users.register
 Content-Type: application/json
 
@@ -5,6 +6,17 @@ Content-Type: application/json
   "login": "masha",
   "password": "secret"
 }
+### login
+POST https://localhost:8443/users.login
+Content-Type: application/json
+
+{
+  "login": "vasya",
+  "password": "secret"
+}
+> {%
+client.global.set('token', response.body.token);
+ %}
 
 ### Get
 GET https://localhost:8443/accounts.getMy
@@ -12,4 +24,5 @@ Authorization: Basic masha secret
 
 ### Get
 GET https://localhost:8443/accounts.getMy
-Authorization: Bearer gSV9fAGsRpbGl5cgUG-rizHqCBf_zNbQr0YPXRf4sQNudGhEHJiLKKZID22h_bjcpsDLYWcODDT6oTq28w2p_pS6IehCj0KWHd24g4SExtH11uZ1zwAWM9TdKX69iVbsidmxIjdOVorNRT29_DDBE2T2rWXhhZvELQO0m_p1gvc
+Authorization: Bearer {{token}}
+

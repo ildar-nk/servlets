@@ -1,9 +1,7 @@
 package org.example.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.dto.UserGetAllResponseDTO;
-import org.example.dto.UserRegisterRequestDTO;
-import org.example.dto.UserRegisterResponsetDTO;
+import org.example.dto.*;
 import org.example.entity.TokenEntity;
 import org.example.entity.UserEntity;
 import org.example.exception.UsernameAlreadyRegisteredException;
@@ -29,7 +27,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public UserRegisterResponsetDTO register(UserRegisterRequestDTO requestData) {
+    public UserRegisterResponseDTO register(UserRegisterRequestDTO requestData) {
         final String hashedPassword = passwordEncoder.encode(requestData.getPassword());
         repository.findByLogin(requestData.getLogin()).ifPresent(o -> {
             throw new UsernameAlreadyRegisteredException(o.getLogin());
@@ -40,12 +38,9 @@ public class UserService {
                 hashedPassword
         ));
 
-        byte[] buffer = new byte[128];
-        random.nextBytes(buffer);
-        final String token = Base64.getUrlEncoder().withoutPadding().encodeToString(buffer);
-        repository.save(new TokenEntity(saved.getId(), token));
+        final String token = createToken(saved);
 
-        return new UserRegisterResponsetDTO(saved.getId(), saved.getLogin(), token);
+        return new UserRegisterResponseDTO(saved.getId(), saved.getLogin(), token);
     }
 
     public LoginAuthentification authentificate(String login, String password) {
@@ -63,5 +58,25 @@ public class UserService {
                 .map(o -> new TokenAuthentification(o.getLogin()))
                 .orElseThrow(TokenNotFoundException::new)
                 ;
+    }
+
+    public UserLoginResponseDTO login(UserLoginRequestDTO requestData) {
+        final UserEntity entity = repository.findByLogin(requestData.getLogin()).orElseThrow(NotFoundException::new);
+
+        if (!passwordEncoder.matches(requestData.getPassword(), entity.getPassword())){
+            throw new CredentialNotMatchesException();
+        }
+        final String token = createToken(entity);
+
+        return new UserLoginResponseDTO(entity.getId(), entity.getLogin(), token);
+
+    }
+
+    private String createToken(UserEntity saved) {
+        byte[] buffer = new byte[128];
+        random.nextBytes(buffer);
+        final String token = Base64.getUrlEncoder().withoutPadding().encodeToString(buffer);
+        repository.save(new TokenEntity(saved.getId(), token));
+        return token;
     }
 }

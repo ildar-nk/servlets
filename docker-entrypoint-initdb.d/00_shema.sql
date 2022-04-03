@@ -2,7 +2,8 @@ CREATE TABLE users
 (
     id      BIGSERIAL PRIMARY KEY,
     login    TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL
+    password TEXT NOT NULL,
+    roles TEXT[] NOT NULL DEFAULT '{VIEW_OWN}'
 );
 
 CREATE TABLE accounts (

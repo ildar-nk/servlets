@@ -51,8 +51,10 @@ public class ServletContextInitializationDestroyListener implements ServletConte
             final Map<String, Handler> routes = new HashMap<>();
             routes.put("/users.getAll", userController::getAll);
             routes.put("/users.register", userController::register);
+            routes.put("/users.login", userController::login);
             routes.put("/accounts.getMy", accountController::getAll);
             routes.put("/accounts.getById", accountController::getById);
+
             final ServletContext servletContext = sce.getServletContext();
             servletContext.setAttribute(ContexAttributes.ROUTES_ATTR, routes);
             servletContext.setAttribute(ContexAttributes.AUTHENTICATOR_ATTR, userService);

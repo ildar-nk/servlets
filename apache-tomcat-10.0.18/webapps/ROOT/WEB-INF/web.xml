@@ -23,14 +23,14 @@
         <filter-name>anon</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    <filter>
-        <filter-name>x509</filter-name>
-        <filter-class>org.example.filter.X509AuthentificationFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>x509</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
+<!--    <filter>-->
+<!--        <filter-name>x509</filter-name>-->
+<!--        <filter-class>org.example.filter.X509AuthentificationFilter</filter-class>-->
+<!--    </filter>-->
+<!--    <filter-mapping>-->
+<!--        <filter-name>x509</filter-name>-->
+<!--        <url-pattern>/*</url-pattern>-->
+<!--    </filter-mapping>-->
     <filter>
         <filter-name>basic</filter-name>
         <filter-class>org.example.filter.BasicAuthenticationFilter</filter-class>
