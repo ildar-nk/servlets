@@ -6,6 +6,7 @@ Content-Type: application/json
   "login": "masha",
   "password": "secret"
 }
+
 ### login
 POST https://localhost:8443/users.login
 Content-Type: application/json
@@ -18,11 +19,45 @@ Content-Type: application/json
 client.global.set('token', response.body.token);
  %}
 
+### login by admin
+POST https://localhost:8443/users.login
+Content-Type: application/json
+
+{
+  "login": "admin",
+  "password": "secret"
+}
+> {%
+client.global.set('token', response.body.token);
+ %}
+
 ### Get
-GET https://localhost:8443/accounts.getMy
+GET https://localhost:8443/accounts.getAll
 Authorization: Basic masha secret
 
-### Get
-GET https://localhost:8443/accounts.getMy
+### Get All Accounts
+GET https://localhost:8443/accounts.getAll
 Authorization: Bearer {{token}}
 
+### Change vasya Roles
+GET https://localhost:8443/users.changeRoles
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "login": "vasya",
+  "roles": [
+    "ACCOUNTS_VIEW_ALL"
+  ]
+}
+
+### Create danya by Admin Roles
+GET https://localhost:8443/users.create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "login": "danya",
+  "password": "secret",
+  "roles": ["USERS_VIEW_ALL"]
+}

@@ -52,7 +52,10 @@ public class ServletContextInitializationDestroyListener implements ServletConte
             routes.put("/users.getAll", userController::getAll);
             routes.put("/users.register", userController::register);
             routes.put("/users.login", userController::login);
-            routes.put("/accounts.getMy", accountController::getAll);
+            routes.put("/users.create", userController::create);
+            routes.put("/users.changeRoles", userController::changeRoles);
+
+            routes.put("/accounts.getAll", accountController::getAll);
             routes.put("/accounts.getById", accountController::getById);
 
             final ServletContext servletContext = sce.getServletContext();

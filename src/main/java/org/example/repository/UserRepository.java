@@ -15,7 +15,7 @@ public class UserRepository {
     public List<UserEntity> getAll() {
         return jdbi.withHandle(handle -> handle.createQuery(
                 // language=PostgreSQL
-                "SELECT id, login FROM users ORDER BY id")
+                "SELECT id, login, roles FROM users ORDER BY id")
                 .mapToBean(UserEntity.class)
                 .list());
     }
@@ -23,7 +23,7 @@ public class UserRepository {
     public Optional<UserEntity> findByLogin(String login) {
         return jdbi.withHandle(handle -> handle.createQuery(
                 // language=PostgreSQL
-                "SELECT id, login, password FROM users WHERE login = :login"
+                "SELECT id, login, password, roles FROM users WHERE login = :login"
         ).bind("login", login).mapToBean(UserEntity.class).findOne());
 
     }
@@ -32,11 +32,12 @@ public class UserRepository {
         return jdbi.withHandle(handle -> handle.createQuery(
                 // language=PostgreSQL
                 """
-                        INSERT INTO users(login, password) VALUES (:login, :password)
-                        RETURNING id, login, password
+                        INSERT INTO users(login, password, roles) VALUES (:login, :password, :roles)
+                        RETURNING id, login, password, roles
                         """
         ).bind("login", entity.getLogin())
                 .bind("password", entity.getPassword())
+                .bind("roles", entity.getRoles())
                 .mapToBean(UserEntity.class)
                 .one());
     }
@@ -57,13 +58,27 @@ public class UserRepository {
         return jdbi.withHandle(handle -> handle.createQuery(
                 // language=PostgreSQL
                 """
-                SELECT u.id, u.login, NULL
-                FROM tokens t 
-                JOIN users u on t.user_id = u.id
-                WHERE t.value = :token
-                """)
+                        SELECT u.id, u.login, NULL, u.roles
+                        FROM tokens t 
+                        JOIN users u on t.user_id = u.id
+                        WHERE t.value = :token
+                        """)
                 .bind("token", token)
                 .mapToBean(UserEntity.class)
                 .findOne());
+    }
+
+    public UserEntity setRolesByLogin(String login, String[] roles) {
+        return jdbi.withHandle(handle -> handle.createQuery(
+                // language=PostgreSQL
+                """
+                        UPDATE users SET roles = :roles WHERE login = :login
+                        RETURNING id, login, roles
+                        """)
+                .bind("roles", roles)
+                .bind("login", login)
+                .mapToBean(UserEntity.class)
+                .one()
+        );
     }
 }

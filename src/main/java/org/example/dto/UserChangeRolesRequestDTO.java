@@ -1,4 +1,4 @@
-package org.example.entity;
+package org.example.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class UserEntity {
-    private long id;
+public class UserChangeRolesRequestDTO {
     private String login;
-    private String password;
     private String[] roles;
+//    private boolean agreemented;
 }

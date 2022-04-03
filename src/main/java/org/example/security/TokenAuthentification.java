@@ -5,6 +5,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TokenAuthentification implements Authentication{
     private final String login;
+    private final String[] roles;
+
+    @Override
+    public String[] getRoles() {
+        return roles;
+    }
+
     @Override
     public String getname() {
         return login;

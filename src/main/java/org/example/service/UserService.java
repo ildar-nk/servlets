@@ -20,7 +20,10 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final SecureRandom random = new SecureRandom();
 
-    public List<UserGetAllResponseDTO> getAll() {
+    public List<UserGetAllResponseDTO> getAll(Authentication auth) {
+        if (!auth.hasRole(Roles.USERS_VIEW_ALL)){
+            throw new ForbiddenException();
+        }
         return repository.getAll()
                 .stream()
                 .map(o -> new UserGetAllResponseDTO(o.getId(), o.getLogin()))
@@ -35,7 +38,8 @@ public class UserService {
         final UserEntity saved = repository.save(new UserEntity(
                 0L,
                 requestData.getLogin(),
-                hashedPassword
+                hashedPassword,
+                new String[]{}
         ));
 
         final String token = createToken(saved);
@@ -50,12 +54,12 @@ public class UserService {
             throw new CredentialNotMatchesException();
         }
 
-        return new LoginAuthentification(login);
+        return new LoginAuthentification(login, entity.getRoles());
     }
 
     public TokenAuthentification authentificate(String token) {
         return repository.findByTokin(token)
-                .map(o -> new TokenAuthentification(o.getLogin()))
+                .map(o -> new TokenAuthentification(o.getLogin(), o.getRoles()))
                 .orElseThrow(TokenNotFoundException::new)
                 ;
     }
@@ -78,5 +82,32 @@ public class UserService {
         final String token = Base64.getUrlEncoder().withoutPadding().encodeToString(buffer);
         repository.save(new TokenEntity(saved.getId(), token));
         return token;
+    }
+
+    public UserCreateResponseDTO create(Authentication auth, UserCreateRequestDTO requestData) {
+        if (!auth.hasRole(Roles.USERS_EDIT_ALL)){
+            throw new ForbiddenException();
+        }
+
+        final String hashedPassword = passwordEncoder.encode(requestData.getPassword());
+        repository.findByLogin(requestData.getLogin()).ifPresent(o -> {
+            throw new UsernameAlreadyRegisteredException(o.getLogin());
+        });
+        final UserEntity saved = repository.save(new UserEntity(
+                0L,
+                requestData.getLogin(),
+                hashedPassword,
+                requestData.getRoles()
+        ));
+
+        return new UserCreateResponseDTO(saved.getId(), saved.getLogin());
+    }
+
+    public UserChangeRolesResponseDTO changeRoles(Authentication auth, UserChangeRolesRequestDTO requestData) {
+        if (!auth.hasRole(Roles.USERS_EDIT_ALL)){
+            throw new ForbiddenException();
+        }
+        final UserEntity entity = repository.setRolesByLogin(requestData.getLogin(), requestData.getRoles());
+        return new UserChangeRolesResponseDTO(entity.getId(), entity.getLogin());
     }
 }

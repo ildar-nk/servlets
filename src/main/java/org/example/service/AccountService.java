@@ -7,6 +7,7 @@ import org.example.repository.AccountRepository;
 import org.example.security.Authentication;
 import org.example.security.ForbiddenException;
 import org.example.security.NotFoundException;
+import org.example.security.Roles;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +21,15 @@ public class AccountService {
         if (auth.isAnonymous()){
             throw new ForbiddenException();
         }
+        if (auth.hasRole(Roles.ACCOUNTS_VIEW_ALL)){
+            return repository.getAll().stream()
+                    .map(o -> new AccountGetAllResponseDTO(
+                            o.getId(),
+                            o.getBalance()
+                    ))
+                    .collect(Collectors.toList());
+        }
+
         return repository.getAllByOwner(auth.getname()).stream()
                 .map(o -> new AccountGetAllResponseDTO(
                         o.getId(),

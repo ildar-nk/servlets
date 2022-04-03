@@ -21,6 +21,14 @@ public class AccountRepository {
                 .list()
         );
     }
+    public List<AccountEntity> getAll(){
+        return jdbi.withHandle(handle -> handle.createQuery(
+                // language=PostgreSQL
+                "SELECT id, owner, balance FROM accounts") // order by limit offset
+                .mapToBean(AccountEntity.class)
+                .list()
+        );
+    }
 
     public Optional<AccountEntity> getById(final String id) {
         return jdbi.withHandle(handle -> handle.createQuery(
